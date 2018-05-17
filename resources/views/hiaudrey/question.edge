@@ -1,0 +1,109 @@
+
+@layout('layout/auth/main')
+ @section('content')
+
+
+{{--  -------------------------------------------------------------------------------------------------------------------------------------  --}}
+<div class="row" style="height:50px" id="magicalDIV">
+</div>
+
+{{--  ====================================================================================  --}}
+
+
+
+ 
+<style>
+    {{--  隱藏的form input  --}}
+    .Invisible {
+      display: none;
+    }
+    {{--  紅色的星號  --}}
+    .isneedicon{
+        color:red;
+    }
+</style>
+
+<div style="height:40px;"></div>
+
+<div class="container-fluid">
+
+    {{-- ========================================= --}}
+<form action="{{ route('QuestionController.store')}}" method="POST" id="quest_form">
+  {{ csrfField() }}
+<div class="form-group">
+    <label for="staticEmail" class="col-form-label">櫃號:</label>
+    <div class="col">
+        <input type="text" name="qu_store_num" class="form-control" id="real_store_num" readonly>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="staticEmail" class="col-form-label">櫃名:</label>
+    <div class="col">
+        <select id="store_name_in" class="form-control">
+            @each(item in store_data)
+            <option value="{{item.store_num}}">{{item.store_name}}</option>
+            @endeach
+        </select>
+        <input type="text" name="qu_store_name" class="form-control" id="real_store_name" style="display:none">
+    </div>
+</div>
+<div class="form-group">
+    <label for="staticEmail" class="col-form-label">試穿日期:</label>
+    <div class="col">
+        <input type="date" name="qu_test_date" class="form-control" aria-describedby="emailHelp">
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="staticEmail" class="col-form-label">試穿尺寸:</label>
+    <div class="col">
+        <input type="text" name="qu_test_size" class="form-control">
+    </div>
+</div>
+<div class="form-group">
+    <label for="staticEmail" class="col-form-label">體驗尺碼:</label>
+    <div class="col">
+        <input type="text" name="qu_size" class="form-control">
+    </div>
+</div>
+
+
+
+<div class="form-group">
+<label>是否完成 : </label>
+  <div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="qu_2_1" id="inlineRadio1" value="是">
+    <label class="form-check-label" for="inlineRadio1">是</label>
+  </div>
+  <div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="qu_2_1" id="inlineRadio2" value="否">
+    <label class="form-check-label" for="inlineRadio2">否</label>
+  </div>
+</div>
+
+<div class="form-group">
+    <label>未完成原因:</label>
+    <textarea name="qu_1_1_1" cols="30" rows="8" class="form-control">
+    </textarea>
+</div>
+
+
+<input type="submit" value="送出問卷" class="btn btn-outline-info">
+
+</form>
+
+</div>
+{{ script('https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js')}}
+{{ script('https://cdn.jsdelivr.net/npm/vue/dist/vue.js')}}
+{{ script('../js/question.js') }}
+
+<script>
+  $("#store_name_in").change(function(){
+    var txt = $('#store_name_in :selected').text();
+    $("#real_store_name").val(txt);
+    $("#real_store_num").val($("#store_name_in").val())
+  })
+</script>
+@endsection
+
