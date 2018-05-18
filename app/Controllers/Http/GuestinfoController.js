@@ -56,23 +56,27 @@ class GuestinfoController {
      };
 
     guest_data.validator_num = getCode(5);
-    
-    console.log(guest_data)
-    if(guest_data.guest_size == "其他尺寸"){
-      guest_data.status = "尺寸不符";
-    }
-    else{
-      guest_data.status = "未審核";
-    }
+
+    //驗證此客戶是否已存在資料庫中，若是有就將其狀態改為 資料重複 沒有就判斷是否為其他尺寸
+    const repeat_gu = await Database.select('*').from('guestinfos').where('guest_name',guest_data.guest_name).andWhere('cell_phone',guest_data.cell_phone).andWhere('birthday',guest_data.birthday);
+    // console.log(repeat_gu); 
+    if(repeat_gu.length >= 1 ){
+      guest_data.status = "客資重複";
+     }else{
+      if(guest_data.guest_size == "其他尺寸"){
+        guest_data.status = "尺寸不符";
+      }
+      else{
+        guest_data.status = "未審核";
+      }
+     }
+    // console.log(repeat_gu)
     //將客戶資料存進table中
     await gestmodel.create(guest_data)
-
     session.clear();
     return view.render('guestinfo.sucess')
   }
   
-
-
 }
 
 
