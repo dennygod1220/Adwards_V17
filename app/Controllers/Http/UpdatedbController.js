@@ -19,7 +19,7 @@ class UpdatedbController {
     //Batch ，一旦開始了就不能停，除非重啟server 
     async start({ params }) {
         console.log("開始")
-        var j = schedule.scheduleJob('0 03 * * * *', async function () {
+        var j = schedule.scheduleJob('0 0 12 * * *', async function () {
             console.log("batch running==========================================")
             //取得未審核、不符合、非其他尺寸的狀態所有人
             var unaudited_guest = await Database.select('id', 'guest_invoice', 'guest_name', 'status').from('guestinfos').whereNot('guest_size', '其他尺寸').andWhere('status', '未審核').orWhere('status', '不符合');
@@ -57,12 +57,12 @@ class UpdatedbController {
 
                     const org_msg2 = "感謝您預約『Audrey魔塑W弦試穿體驗』，提醒您於" + date2 + " " + time + "至" + storename + "報到，我們將準時為您服務。";
                     const msg2 = utf8.encode(org_msg2);
-                    // req("http://api.message.net.tw/send.php?id=0905273575&password=C27198500&tel=" + phone + ";&mtype=G&encoding=utf8&msg=" + msg1, function (error, response, body) {
-                    //     console.log(body);
-                    // });
-                    // req("http://api.message.net.tw/send.php?id=0905273575&password=C27198500&tel=" + phone + ";&mtype=G&encoding=utf8&sdate=" + date + "042000&msg=" + msg2, function (error, response, body) {
-                    //     console.log(body);
-                    // });
+                    req("http://api.message.net.tw/send.php?id=0905273575&password=C27198500&tel=" + phone + ";&mtype=G&encoding=utf8&msg=" + msg1, function (error, response, body) {
+                        console.log(body);
+                    });
+                    req("http://api.message.net.tw/send.php?id=0905273575&password=C27198500&tel=" + phone + ";&mtype=G&encoding=utf8&sdate=" + date + "042000&msg=" + msg2, function (error, response, body) {
+                        console.log(body);
+                    });
                     //將此客戶狀態改為已發送
                     gu.status = "已發送";
                     //發票狀態改為2
